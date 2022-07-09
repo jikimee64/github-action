@@ -1,0 +1,30 @@
+# build-push.yml
+name: 'build-push'
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: build, deploy
+    steps:
+      # 코드 저장소로 부터 CI 서버로 코드 pull
+      - name: checkout
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+      - uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # gradle 빌드 실행을 위한 권한을 부여
+      - name: grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: gradle build
+        run: ./gradlew clean build
