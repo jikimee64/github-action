@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: build, deploy
+    name: build
     steps:
       # 코드 저장소로 부터 CI 서버로 코드 pull
       - name: checkout
@@ -26,8 +26,8 @@ jobs:
       - name: grant execute permission for gradlew
         run: chmod +x gradlew
 
-#      - name: gradle build
-#        run: ./gradlew clean build
+      - name: gradle build
+        run: ./gradlew clean build
 
        # private 저장소일경우 로그인 필요
       - name: Login to DockerHub
@@ -48,7 +48,44 @@ jobs:
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          author_name: Github Action Test # default: 8398a7@action-slack
+          author_name: build & docker push # default: 8398a7@action-slack
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
+
+  deploy:
+    needs: build
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: docker-compose.yml send
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.NCP_HOST }} # 운영 인스턴스 public DNS
+          username: ${{ secrets.NCP_USERNAME }} # 운영 인스턴스의 유저명
+          key: ${{ secrets.NCP_PRIVATE_KEY }} # 운영 인스턴스의 pem 키
+          source: './docker-compose.yml'
+  #        target: '/home/ubuntu/
+          strip_components: 1 # root 디렉토리를 현 프로젝트의 workspace로 설정
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+
+      - name: docker-compose.yml run
+        run: |
+#           docker pull ${{secrets.DOCKERHUB_USERNAME}}/${{secrets.DOCKER_REPO}}
+#           cd /home/ubuntu/
+#           docker-compose up --build -d
+
+      - name: action-slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          author_name: docker pull & deploy # default: 8398a7@action-slack
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
