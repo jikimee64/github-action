@@ -36,6 +36,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: build docker
+        # iamgeName명은 tag 이름과 동일
         run: ./gradlew bootBuildImage --imageName=${{ secrets.DOCKERHUB_IMAGE_NAME }}
 
       - name: Docker push
