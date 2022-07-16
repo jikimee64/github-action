@@ -10,7 +10,6 @@ public class GithubactionApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(GithubactionApplication.class, args);
-
 	}
 
 }
