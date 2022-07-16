@@ -79,6 +79,7 @@ jobs:
         run: |
            cd /home/
            docker-compose down
+           docker rmi -f $(docker images -a -q)
            docker-compose up --build -d
 
       - name: action-slack
