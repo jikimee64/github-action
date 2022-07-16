@@ -5,10 +5,10 @@ services:
     container_name: api-server
     ports:
       - "8080:8080"
-#    environment:
-#      - "SPRING_PROFILES_ACTIVE=dev"
-#    volumes:
-#      - ../../logs:/var/log/application-logs
+    environment:
+      - "SPRING_PROFILES_ACTIVE=dev"
+    volumes:
+      - ../../logs:/var/log/application-logs
     network_mode: host
 
 # 참고
