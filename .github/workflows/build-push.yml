@@ -57,7 +57,7 @@ jobs:
   deploy:
     needs: build
     name: deploy
-    runs-on: self-hosted
+    runs-on: [ self-hosted ]
     steps:
 #      - name: docker-compose.yml send
 #        uses: appleboy/scp-action@master
