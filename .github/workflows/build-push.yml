@@ -77,7 +77,7 @@ jobs:
 
       - name: docker-compose.yml run
         run: |
-           docker pull ${{secrets.DOCKERHUB_USERNAME}}/${{secrets.DOCKER_REPO}}
+#           docker pull ${{secrets.DOCKERHUB_USERNAME}}/${{secrets.DOCKER_REPO}}
            cd /home/
            docker-compose down
            docker-compose up --build -d
