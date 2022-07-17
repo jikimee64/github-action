@@ -1,15 +1,40 @@
 version: "3.7"
 services:
+  gateway-server:
+    image: 'dncjf64/palette:latest'
+    container_name: gateway-server
+    ports:
+      - "8080:8080"
+#    networks:
+#      - default
+#      - palette-dev
+    environment:
+      - "SPRING_PROFILES_ACTIVE=dev"
+
   api-server:
     image: 'dncjf64/palette:latest'
     container_name: api-server
     ports:
-      - "8080:8080"
+      - "8081:8081"
+#    networks:
+#      - default
+#      - palette-dev
     environment:
       - "SPRING_PROFILES_ACTIVE=dev"
-    volumes:
-      - ../../logs:/var/log/application-logs
-    network_mode: host
+#    volumes:
+#      - ../../logs:/var/log/application-logs
+
+# 네트워크 생성
+#networks:
+#  palette-dev: #네트워크 이름
+#    driver: bridge
+#    network_mode: host
+
+# 외부 네트워크 사용
+networks:
+  default:
+    external:
+      name: palette-dev
 
 # 참고
 # profiles 별로 docker-compose 분리 시
