@@ -13,13 +13,18 @@ import org.springframework.stereotype.Component;
 @Data
 public class AppListener implements ApplicationRunner {
 
-    @Value("${test}")
-    private String test;
+    @Value("${kwc}")
+    private String kwc;
+
+    @Value("${username}")
+    private String username;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        log.info("{}", test);
-        System.out.println(test);
+        log.info("{}", kwc);
+        System.out.println(kwc);
+        log.info("{}", username);
+        System.out.println(username);
     }
 
 }
