@@ -1,15 +1,14 @@
 #!/bin/bash
 
-echo "sleep 60s..."
-sleep 60s
-if [ -z "docker ps | grep gateway-server" ]; then
-  sudo docker exec gateway-server sh -c "cd ~ ; mkdir .aws"
-  sudo docker cp /home/credentials gateway-server:~/.aws
-  sudo docker cp /home/config gateway-server:~/.aws
-  echo "docker aws configure file copy success."
+echo "aws configure in container injection."
+echo "container start is wait 30s"
+# sleep 10s
+if [ -z $(docker ps -aq -f status=running -f name=api-server) ]; then
+  echo "not start api-server container"
 else
-  echo "not start gateway-server container"vui
+  echo "api-server container is running"
+  echo "docker aws configure file copy success."
+  sudo docker exec --user root api-server bash -c "cd / ; mkdir .aws"
+  sudo docker cp /home/credentials api-server:/.aws
+  sudo docker cp /home/config api-server:/.aws
 fi
-
-# 참고
-# https://eyeballs.tistory.com/49
